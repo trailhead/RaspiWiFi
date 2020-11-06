@@ -24,9 +24,11 @@ def copy_configs(wpa_enabled_choice):
 		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/hostapd.conf.wpa /etc/hostapd/hostapd.conf')
 	else:
 		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/hostapd.conf.nowpa /etc/hostapd/hostapd.conf')
-	
+
 	os.system('mv /etc/dhcpcd.conf /etc/dhcpcd.conf.original')
 	os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
+	# Remove any previous installation. Installing when already in client mode breaks things
+	os.system('rm -rf /etc/cron.raspiwifi')
 	os.system('mkdir /etc/cron.raspiwifi')
 	os.system('cp /usr/lib/raspiwifi/reset_device/static_files/aphost_bootstrapper /etc/cron.raspiwifi')
 	os.system('chmod +x /etc/cron.raspiwifi/aphost_bootstrapper')

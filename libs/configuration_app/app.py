@@ -109,7 +109,11 @@ def set_ap_client_mode():
     os.system('rm /etc/cron.raspiwifi/aphost_bootstrapper')
     os.system('cp /usr/lib/raspiwifi/reset_device/static_files/apclient_bootstrapper /etc/cron.raspiwifi/')
     os.system('chmod +x /etc/cron.raspiwifi/apclient_bootstrapper')
+    # Always remove these because if originals don't exist, host mode config doesn't get replaced.
+    os.system('rm -f /etc/dnsmasq.conf')
     os.system('mv /etc/dnsmasq.conf.original /etc/dnsmasq.conf')
+    # Always remove these because if originals don't exist, host mode config doesn't get replaced.
+    os.system('rm -f /etc/dhcpcd.conf')
     os.system('mv /etc/dhcpcd.conf.original /etc/dhcpcd.conf')
     os.system('reboot')
 
