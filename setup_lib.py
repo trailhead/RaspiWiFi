@@ -29,24 +29,29 @@ def copy_configs(wpa_enabled_choice):
   # Copy runtime files
 	os.system('cp -a libs/* /usr/lib/raspiwifi/')
 
+	# Hostapd config is installed once at install time, and is not touched later
+	if wpa_enabled_choice.lower() == "y":
+		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/hostapd.conf.wpa /etc/hostapd/hostapd.conf')
+	else:
+		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/hostapd.conf.nowpa /etc/hostapd/hostapd.conf')
+
+	# Install cron and associated folder
+	os.system('echo "# RaspiWiFi Startup" >> /etc/crontab')
+	os.system('echo "@reboot root run-parts /etc/cron.raspiwifi/" >> /etc/crontab')
+
+	# Copy initial template conf file, to be updated later in update_main_config_file()
+	os.system('mv /usr/lib/raspiwifi/reset_device/static_files/raspiwifi.conf /etc/raspiwifi')
+
 	# Enter host mode
 	os.system('mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.original')
 	os.system('rm -f ./tmp/*')
 	os.system('mv /etc/dnsmasq.conf /etc/dnsmasq.conf.original')
 	os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dnsmasq.conf /etc/')
 
-	if wpa_enabled_choice.lower() == "y":
-		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/hostapd.conf.wpa /etc/hostapd/hostapd.conf')
-	else:
-		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/hostapd.conf.nowpa /etc/hostapd/hostapd.conf')
-
 	os.system('mv /etc/dhcpcd.conf /etc/dhcpcd.conf.original')
 	os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
 	os.system('cp /usr/lib/raspiwifi/reset_device/static_files/aphost_bootstrapper /etc/cron.raspiwifi')
 	os.system('chmod +x /etc/cron.raspiwifi/aphost_bootstrapper')
-	os.system('echo "# RaspiWiFi Startup" >> /etc/crontab')
-	os.system('echo "@reboot root run-parts /etc/cron.raspiwifi/" >> /etc/crontab')
-	os.system('mv /usr/lib/raspiwifi/reset_device/static_files/raspiwifi.conf /etc/raspiwifi')
 	os.system('touch /etc/raspiwifi/host_mode')
 
 def update_main_config_file(entered_ssid, auto_config_choice, auto_config_delay, ssl_enabled_choice, server_port_choice, wpa_enabled_choice, wpa_entered_key):
