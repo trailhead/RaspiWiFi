@@ -13,10 +13,19 @@ def install_prereqs():
 
 def copy_configs(wpa_enabled_choice):
 	# Remove any previous installation and reset. Previously, unstalling when already in client mode broke things
-	os.system('rm -rf /etc/cron.raspiwifi')
+	if os.path.exists('/etc/cron.raspiwifi'):
+		os.system('rm -rf /etc/cron.raspiwifi')
+
 	os.system('mkdir /etc/cron.raspiwifi')
 
+	if os.path.exists('/usr/lib/raspiwifi'):
+		os.system('rm -rf /usr/lib/raspiwifi')
+
 	os.system('mkdir /usr/lib/raspiwifi')
+
+	if os.path.exists('/etc/raspiwifi'):
+		os.system('rm -rf /etc/raspiwifi')
+
 	os.system('mkdir /etc/raspiwifi')
 	os.system('mkdir /etc/raspiwifi/backup')
 
