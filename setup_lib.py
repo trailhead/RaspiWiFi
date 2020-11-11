@@ -12,9 +12,24 @@ def install_prereqs():
 	os.system('clear')
 
 def copy_configs(wpa_enabled_choice):
+	# Remove any previous installation and reset. Previously, unstalling when already in client mode broke things
+	os.system('rm -rf /etc/cron.raspiwifi')
+	os.system('mkdir /etc/cron.raspiwifi')
+
 	os.system('mkdir /usr/lib/raspiwifi')
 	os.system('mkdir /etc/raspiwifi')
+	os.system('mkdir /etc/raspiwifi/backup')
+
+	# Back up critical config files
+	os.system('cp /etc/dhcpcd.conf', '/etc/raspiwifi/backup/')
+	os.system('cp /etc/dnsmasq.conf', '/etc/raspiwifi/backup/')
+	if (os.paath.exists('/etc/hostapd/hostapd.conf')):
+		os.system('cp /etc/hostapd/hostapd.conf', '/etc/raspiwifi/backup/')
+
+  # Copy runtime files
 	os.system('cp -a libs/* /usr/lib/raspiwifi/')
+
+	# Enter host mode
 	os.system('mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.original')
 	os.system('rm -f ./tmp/*')
 	os.system('mv /etc/dnsmasq.conf /etc/dnsmasq.conf.original')
@@ -27,9 +42,6 @@ def copy_configs(wpa_enabled_choice):
 
 	os.system('mv /etc/dhcpcd.conf /etc/dhcpcd.conf.original')
 	os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
-	# Remove any previous installation. Installing when already in client mode breaks things
-	os.system('rm -rf /etc/cron.raspiwifi')
-	os.system('mkdir /etc/cron.raspiwifi')
 	os.system('cp /usr/lib/raspiwifi/reset_device/static_files/aphost_bootstrapper /etc/cron.raspiwifi')
 	os.system('chmod +x /etc/cron.raspiwifi/aphost_bootstrapper')
 	os.system('echo "# RaspiWiFi Startup" >> /etc/crontab')
