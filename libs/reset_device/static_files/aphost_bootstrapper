@@ -1,6 +1,8 @@
 #!/bin/bash
 
-ifconfig wlan0 up
+#ifconfig wlan0 up
+
+systemctl stop wpa_supplicant
 
 python3 /usr/lib/raspiwifi/reset_device/reset.py &
 

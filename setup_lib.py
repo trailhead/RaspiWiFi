@@ -23,17 +23,17 @@ def copy_configs(wpa_enabled_choice):
 
 	os.system('mkdir /usr/lib/raspiwifi')
 
-	if os.path.exists('/etc/raspiwifi'):
-		os.system('rm -rf /etc/raspiwifi')
+	if not os.path.exists('/etc/raspiwifi'):
+		os.system('mkdir /etc/raspiwifi')
 
-	os.system('mkdir /etc/raspiwifi')
-	os.system('mkdir /etc/raspiwifi/backup')
+	if not os.path.exists('/etc/raspiwifi/backup'):
+		os.system('mkdir /etc/raspiwifi/backup')
 
 	# Back up critical config files
-	os.system('cp /etc/dhcpcd.conf', '/etc/raspiwifi/backup/')
-	os.system('cp /etc/dnsmasq.conf', '/etc/raspiwifi/backup/')
-	if (os.paath.exists('/etc/hostapd/hostapd.conf')):
-		os.system('cp /etc/hostapd/hostapd.conf', '/etc/raspiwifi/backup/')
+	os.system('cp /etc/dhcpcd.conf /etc/raspiwifi/backup/')
+	os.system('cp /etc/dnsmasq.conf /etc/raspiwifi/backup/')
+	if (os.path.exists('/etc/hostapd/hostapd.conf')):
+		os.system('cp /etc/hostapd/hostapd.conf /etc/raspiwifi/backup/')
 
   # Copy runtime files
 	os.system('cp -a libs/* /usr/lib/raspiwifi/')

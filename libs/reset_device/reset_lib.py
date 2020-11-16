@@ -58,13 +58,12 @@ def update_ssid(ssid_prefix, serial_last_four):
 			for line in file:
 				if 'ssid=' in line:
 					line_array = line.split('=')
-					line_array[1] = ssid_prefix + ' ' + serial_last_four
-					print(line_array[0] + '=' + line_array[1])
+					print(line_array[0] + '=' + ssid_prefix)
 				else:
 					print(line, end = '')
 
 		reboot_required = True
-			
+
 	return reboot_required
 
 def is_wifi_active():
@@ -90,4 +89,8 @@ def reset_to_host_mode():
 		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dnsmasq.conf /etc/')
 		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
 		os.system('touch /etc/raspiwifi/host_mode')
-	os.system('reboot')
+		os.system('systemctl stop wpa_supplicant')
+		os.system('systemctl disable wpa_supplicant')
+		os.system('systemctl unmask hostapd')
+		os.system('systemctl enable hostapd')
+		os.system('reboot')
